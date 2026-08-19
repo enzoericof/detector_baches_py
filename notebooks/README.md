@@ -56,3 +56,6 @@ regenerarse y volver a ejecutarse de principio a fin.
 El notebook de GPU solo puede validarse completamente en un entorno con CUDA.
 Su estructura se comprueba localmente; la evidencia definitiva es una ejecución
 completa en Colab con el resumen `status: passed`.
+
+La versión publicada incluye esa evidencia: fue ejecutada de principio a fin en
+una Tesla T4, con nueve celdas de código numeradas y sin errores.

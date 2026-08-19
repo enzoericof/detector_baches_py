@@ -83,6 +83,10 @@ temporal de Colab. Sus datos son artificiales y sus métricas no miden la calida
 del futuro detector. La copia automática de resultados a Drive se incorpora en
 la tarea 11.
 
+La copia publicada conserva una ejecución correcta en una Tesla T4: CUDA fue
+confirmada, se completaron las dos épocas y se generaron ambos pesos, la tabla
+de resultados y la gráfica.
+
 ## Estructura
 
 ```text

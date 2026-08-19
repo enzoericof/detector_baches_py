@@ -110,6 +110,39 @@ class MinimumGpuTrainingNotebookTest(unittest.TestCase):
         ):
             self.assertIn(expected_check, self.sources)
 
+    def test_published_copy_contains_a_successful_gpu_execution(self):
+        code_cells = [
+            cell for cell in self.notebook["cells"] if cell["cell_type"] == "code"
+        ]
+        self.assertEqual(
+            [cell["execution_count"] for cell in code_cells],
+            list(range(1, len(code_cells) + 1)),
+        )
+        self.assertFalse(
+            any(
+                output.get("output_type") == "error"
+                for cell in code_cells
+                for output in cell["outputs"]
+            )
+        )
+
+        text_outputs = []
+        for cell in code_cells:
+            for output in cell["outputs"]:
+                text = output.get("text")
+                if isinstance(text, list):
+                    text_outputs.extend(text)
+                elif isinstance(text, str):
+                    text_outputs.append(text)
+        joined_outputs = "".join(text_outputs)
+        for evidence in (
+            '"gpu_name": "Tesla T4"',
+            '"cuda_training_confirmed": true',
+            '"completed_epochs": 2',
+            '"status": "passed"',
+        ):
+            self.assertIn(evidence, joined_outputs)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detector-baches.local/schemas/capture_session.schema.json",
+  "title": "Capture session",
+  "description": "Jornada de captura que agrupa recorridos y épocas de reloj.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "session_id",
+    "device_id",
+    "vehicle_id",
+    "status",
+    "timezone",
+    "started_at_utc",
+    "ended_at_utc",
+    "clock_epochs",
+    "trip_ids"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "session_id": {
+      "type": "string",
+      "pattern": "^session-[0-9]{8}-[0-9]{4}-[A-Za-z0-9][A-Za-z0-9_-]*$"
+    },
+    "device_id": { "type": "string", "minLength": 1 },
+    "vehicle_id": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["active", "completed", "interrupted"] },
+    "timezone": { "type": "string", "minLength": 1 },
+    "started_at_utc": { "type": "string", "format": "date-time" },
+    "ended_at_utc": {
+      "anyOf": [
+        { "type": "string", "format": "date-time" },
+        { "type": "null" }
+      ]
+    },
+    "operator_notes": { "type": ["string", "null"] },
+    "clock_epochs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["clock_epoch_id", "clock_type", "sync_points"],
+        "properties": {
+          "clock_epoch_id": { "type": "string", "minLength": 1 },
+          "clock_type": { "const": "monotonic_since_boot_ns" },
+          "sync_points": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["elapsed_realtime_ns", "utc_time", "source"],
+              "properties": {
+                "elapsed_realtime_ns": { "type": "integer", "minimum": 0 },
+                "utc_time": { "type": "string", "format": "date-time" },
+                "source": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "trip_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^trip-[0-9]{8}-[0-9]{4}-R[0-9]{2}-P[0-9]{2}$"
+      }
+    }
+  }
+}

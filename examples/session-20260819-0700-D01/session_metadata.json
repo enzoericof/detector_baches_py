@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1.0",
+  "session_id": "session-20260819-0700-D01",
+  "device_id": "device-D01",
+  "vehicle_id": "vehicle-V01",
+  "status": "completed",
+  "timezone": "America/Asuncion",
+  "started_at_utc": "2026-08-19T10:00:00.000Z",
+  "ended_at_utc": "2026-08-19T10:35:00.000Z",
+  "operator_notes": "Ejemplo sintético: recorrido corto con pausa y dos segmentos de video.",
+  "clock_epochs": [
+    {
+      "clock_epoch_id": "clock-boot-A1",
+      "clock_type": "monotonic_since_boot_ns",
+      "sync_points": [
+        {
+          "elapsed_realtime_ns": 100000000000,
+          "utc_time": "2026-08-19T10:00:00.000Z",
+          "source": "system_clock"
+        },
+        {
+          "elapsed_realtime_ns": 2200000000000,
+          "utc_time": "2026-08-19T10:35:00.000Z",
+          "source": "system_clock"
+        }
+      ]
+    }
+  ],
+  "trip_ids": [
+    "trip-20260819-0705-R01-P01"
+  ]
+}

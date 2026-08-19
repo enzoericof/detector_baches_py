@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detector-baches.local/schemas/gnss_sample.schema.json",
+  "title": "GNSS sample",
+  "description": "Muestra GNSS sincronizada con el reloj monotónico del dispositivo.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "session_id",
+    "trip_id",
+    "sample_id",
+    "clock_epoch_id",
+    "utc_time",
+    "elapsed_realtime_ns",
+    "latitude",
+    "longitude",
+    "horizontal_accuracy_m",
+    "speed_mps",
+    "heading_deg",
+    "provider"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "session_id": { "type": "string", "minLength": 1 },
+    "trip_id": { "type": "string", "minLength": 1 },
+    "sample_id": { "type": "string", "pattern": "^gps-[0-9]{6}$" },
+    "clock_epoch_id": { "type": "string", "minLength": 1 },
+    "utc_time": { "type": "string", "format": "date-time" },
+    "elapsed_realtime_ns": { "type": "integer", "minimum": 0 },
+    "latitude": { "type": "number", "minimum": -90, "maximum": 90 },
+    "longitude": { "type": "number", "minimum": -180, "maximum": 180 },
+    "horizontal_accuracy_m": { "type": "number", "minimum": 0 },
+    "speed_mps": { "type": ["number", "null"], "minimum": 0 },
+    "heading_deg": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "exclusiveMaximum": 360
+    },
+    "provider": { "type": "string", "minLength": 1 }
+  }
+}

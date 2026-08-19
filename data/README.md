@@ -12,3 +12,5 @@ data/external/   Fuentes externas como RDD2022
 ```
 
 Cada versión del dataset deberá registrar origen, fecha, viaje, criterio de selección, anotaciones y partición de entrenamiento, validación o prueba.
+
+Las capturas crudas se agrupan por jornada y recorrido. Su estructura, formatos y reglas de sincronización se definen en [el protocolo de registro de video, tiempo y GNSS](../docs/synchronization_protocol.md).

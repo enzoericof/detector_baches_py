@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.1.0",
+  "session_id": "session-20260819-0700-D01",
+  "trip_id": "trip-20260819-0705-R01-P01",
+  "route_id": "R01",
+  "pass_number": 1,
+  "status": "completed",
+  "clock_epoch_id": "clock-boot-A1",
+  "mount_version": "mount-M01",
+  "started_at_utc": "2026-08-19T10:05:00.000Z",
+  "ended_at_utc": "2026-08-19T10:20:10.000Z",
+  "started_elapsed_realtime_ns": 400000000000,
+  "ended_elapsed_realtime_ns": 1310000000000,
+  "video": {
+    "container": "mp4",
+    "codec": "h264",
+    "width": 1920,
+    "height": 1080,
+    "nominal_fps": 30.0,
+    "segments": [
+      {
+        "segment_id": "seg-0001",
+        "relative_path": "video/trip-20260819-0705-R01-P01_video_0001.mp4",
+        "status": "complete",
+        "first_frame_elapsed_realtime_ns": 410000000000,
+        "last_frame_elapsed_realtime_ns": 850000000000,
+        "first_frame_media_time_us": 0,
+        "last_frame_media_time_us": 440000000
+      },
+      {
+        "segment_id": "seg-0002",
+        "relative_path": "video/trip-20260819-0705-R01-P01_video_0002.mp4",
+        "status": "complete",
+        "first_frame_elapsed_realtime_ns": 900000000000,
+        "last_frame_elapsed_realtime_ns": 1300000000000,
+        "first_frame_media_time_us": 0,
+        "last_frame_media_time_us": 400000000
+      }
+    ]
+  },
+  "gnss": {
+    "relative_path": "gnss.jsonl",
+    "format": "application/x-ndjson",
+    "sample_count": 6
+  },
+  "events": {
+    "relative_path": "events.jsonl",
+    "format": "application/x-ndjson",
+    "event_count": 8
+  }
+}

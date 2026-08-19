@@ -53,6 +53,11 @@ data/                  Política y manifiestos de datos
 artifacts/             Resultados generados localmente
 ```
 
+## Documentación operativa
+
+- [Arquitectura incremental](docs/architecture.md)
+- [Protocolo de montaje y captura](docs/capture_protocol.md)
+
 ## Alcance inicial
 
 El primer prototipo se limita a cámara RGB, vías urbanas asfaltadas, condiciones diurnas, un celular Android fijo y una clase positiva (`pothole`). Profundidad, severidad técnica, costos de reparación, iOS y operación nocturna quedan fuera del alcance inicial.

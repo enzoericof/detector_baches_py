@@ -41,6 +41,17 @@ $env:PYTHONPATH = "src"
 python -m unittest discover -s tests -v
 ```
 
+## Validar una captura sincronizada
+
+El ejemplo documenta una jornada con un recorrido, dos segmentos de video, una pausa y muestras GNSS. Los MP4 no se incluyen en Git, por lo que la validación del ejemplo omite únicamente la comprobación de existencia de esos binarios:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m detector_baches.capture_validation examples/session-20260819-0700-D01 --allow-missing-media
+```
+
+En una captura real se ejecuta el mismo comando sin `--allow-missing-media`.
+
 ## Estructura
 
 ```text
@@ -57,6 +68,7 @@ artifacts/             Resultados generados localmente
 
 - [Arquitectura incremental](docs/architecture.md)
 - [Protocolo de montaje y captura](docs/capture_protocol.md)
+- [Registro y sincronización de video, tiempo y GNSS](docs/synchronization_protocol.md)
 
 ## Alcance inicial
 

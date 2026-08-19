@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detector-baches.local/schemas/capture_event.schema.json",
+  "title": "Capture event",
+  "description": "Evento operacional situado en la línea temporal de un recorrido.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "session_id",
+    "trip_id",
+    "event_id",
+    "event_type",
+    "clock_epoch_id",
+    "utc_time",
+    "elapsed_realtime_ns"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "session_id": { "type": "string", "minLength": 1 },
+    "trip_id": { "type": "string", "minLength": 1 },
+    "event_id": { "type": "string", "pattern": "^event-[0-9]{6}$" },
+    "event_type": {
+      "enum": [
+        "trip_started",
+        "video_segment_started",
+        "video_segment_ended",
+        "pause_started",
+        "pause_ended",
+        "interruption_detected",
+        "capture_recovered",
+        "trip_completed"
+      ]
+    },
+    "clock_epoch_id": { "type": "string", "minLength": 1 },
+    "utc_time": { "type": "string", "format": "date-time" },
+    "elapsed_realtime_ns": { "type": "integer", "minimum": 0 },
+    "details": { "type": "object" }
+  }
+}

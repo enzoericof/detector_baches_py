@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detector-baches.local/schemas/capture_trip.schema.json",
+  "title": "Captured trip",
+  "description": "Metadatos sincronizados de un recorrido y sus segmentos de video.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "session_id",
+    "trip_id",
+    "route_id",
+    "pass_number",
+    "status",
+    "clock_epoch_id",
+    "mount_version",
+    "started_at_utc",
+    "ended_at_utc",
+    "started_elapsed_realtime_ns",
+    "ended_elapsed_realtime_ns",
+    "video",
+    "gnss",
+    "events"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "session_id": {
+      "type": "string",
+      "pattern": "^session-[0-9]{8}-[0-9]{4}-[A-Za-z0-9][A-Za-z0-9_-]*$"
+    },
+    "trip_id": {
+      "type": "string",
+      "pattern": "^trip-[0-9]{8}-[0-9]{4}-R[0-9]{2}-P[0-9]{2}$"
+    },
+    "route_id": { "type": "string", "minLength": 1 },
+    "pass_number": { "type": "integer", "minimum": 1 },
+    "status": { "enum": ["active", "completed", "interrupted"] },
+    "clock_epoch_id": { "type": "string", "minLength": 1 },
+    "mount_version": { "type": "string", "minLength": 1 },
+    "started_at_utc": { "type": "string", "format": "date-time" },
+    "ended_at_utc": {
+      "anyOf": [
+        { "type": "string", "format": "date-time" },
+        { "type": "null" }
+      ]
+    },
+    "started_elapsed_realtime_ns": { "type": "integer", "minimum": 0 },
+    "ended_elapsed_realtime_ns": { "type": ["integer", "null"], "minimum": 0 },
+    "video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["container", "codec", "width", "height", "nominal_fps", "segments"],
+      "properties": {
+        "container": { "const": "mp4" },
+        "codec": { "const": "h264" },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "nominal_fps": { "type": "number", "exclusiveMinimum": 0 },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "segment_id",
+              "relative_path",
+              "status",
+              "first_frame_elapsed_realtime_ns",
+              "last_frame_elapsed_realtime_ns",
+              "first_frame_media_time_us",
+              "last_frame_media_time_us"
+            ],
+            "properties": {
+              "segment_id": { "type": "string", "pattern": "^seg-[0-9]{4}$" },
+              "relative_path": {
+                "type": "string",
+                "pattern": "^video/[A-Za-z0-9._-]+\\.mp4$"
+              },
+              "status": { "enum": ["complete", "partial"] },
+              "first_frame_elapsed_realtime_ns": { "type": "integer", "minimum": 0 },
+              "last_frame_elapsed_realtime_ns": { "type": ["integer", "null"], "minimum": 0 },
+              "first_frame_media_time_us": { "type": "integer", "minimum": 0 },
+              "last_frame_media_time_us": { "type": ["integer", "null"], "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "gnss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relative_path", "format"],
+      "properties": {
+        "relative_path": { "const": "gnss.jsonl" },
+        "format": { "const": "application/x-ndjson" },
+        "sample_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "events": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relative_path", "format"],
+      "properties": {
+        "relative_path": { "const": "events.jsonl" },
+        "format": { "const": "application/x-ndjson" },
+        "event_count": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

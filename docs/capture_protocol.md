@@ -96,18 +96,25 @@ trip-20260819-0830-R01-P01
 - `PNN`: número de pasada por esa ruta y sentido.
 - Fecha y hora: hora local de Paraguay al iniciar la preparación.
 
-Los archivos originales se organizan de esta forma:
+Los recorridos se agrupan dentro de una jornada (`session_id`). Los archivos originales se organizan de esta forma:
 
 ```text
-data/raw/<trip_id>/
-  video.mp4
-  gnss.*
-  trip_metadata.json
-  mount.jpg
+data/raw/<session_id>/
+  session_metadata.json
+  mount-M01.jpg
   notes.md
+  trips/
+    <trip_id>/
+      trip_metadata.json
+      gnss.jsonl
+      events.jsonl
+      video/
+        <trip_id>_video_0001.mp4
 ```
 
 Los archivos en `data/raw` son inmutables: no se recortan, renombran ni sobrescriben después de ser aceptados.
+
+Los formatos, el reloj común y el tratamiento de pausas, segmentos e interrupciones se especifican en [el protocolo de registro y sincronización](synchronization_protocol.md).
 
 ## 8. Lista previa a la captura
 
@@ -163,7 +170,7 @@ Los archivos en `data/raw` son inmutables: no se recortan, renombran ni sobrescr
 | `operator_notes` | Incidencias y observaciones |
 | `quality_class` | A, B o C según la revisión |
 
-La estructura exacta de `trip_metadata.json` y el formato GNSS se definen en la tarea de sincronización y registro temporal.
+La estructura exacta de la jornada, `trip_metadata.json`, GNSS y eventos se define en [el protocolo de registro y sincronización](synchronization_protocol.md).
 
 ## 12. Clasificación de calidad
 

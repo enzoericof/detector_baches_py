@@ -69,6 +69,20 @@ El [notebook reproducible](notebooks/01_reproducible_smoke_test.ipynb) descarga 
 
 [Abrir el notebook en Google Colab](https://colab.research.google.com/github/enzoericof/detector_baches_py/blob/main/notebooks/01_reproducible_smoke_test.ipynb)
 
+## Ejecutar el entrenamiento mínimo con GPU
+
+El [notebook de validación GPU](notebooks/02_minimum_gpu_training.ipynb) genera
+un conjunto sintético diminuto y entrena dos épocas de un detector YOLO nano.
+En Colab se debe seleccionar `Entorno de ejecución → Cambiar tipo de entorno
+de ejecución → GPU T4` antes de usar `Ejecutar todo`.
+
+[Abrir el entrenamiento mínimo en Google Colab](https://colab.research.google.com/github/enzoericof/detector_baches_py/blob/main/notebooks/02_minimum_gpu_training.ipynb)
+
+Esta prueba exige CUDA y produce una gráfica, pesos y un resumen en el disco
+temporal de Colab. Sus datos son artificiales y sus métricas no miden la calidad
+del futuro detector. La copia automática de resultados a Drive se incorpora en
+la tarea 11.
+
 ## Estructura
 
 ```text

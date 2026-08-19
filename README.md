@@ -52,6 +52,17 @@ python -m detector_baches.capture_validation examples/session-20260819-0700-D01 
 
 En una captura real se ejecuta el mismo comando sin `--allow-missing-media`.
 
+## Validar un manifiesto de dataset
+
+El ejemplo define procedencia, selección de cuadros, clases, particiones por recorrido, estadísticas y huellas de integridad. Como no incluye imágenes ni etiquetas, se valida así:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m detector_baches.dataset_validation examples/dataset-local-v0.1 --allow-missing-artifacts
+```
+
+Una versión real se valida sin `--allow-missing-artifacts` antes de congelarla y usarla en experimentos.
+
 ## Estructura
 
 ```text
@@ -69,6 +80,7 @@ artifacts/             Resultados generados localmente
 - [Arquitectura incremental](docs/architecture.md)
 - [Protocolo de montaje y captura](docs/capture_protocol.md)
 - [Registro y sincronización de video, tiempo y GNSS](docs/synchronization_protocol.md)
+- [Formato del manifiesto del dataset](docs/dataset_manifest.md)
 
 ## Alcance inicial
 

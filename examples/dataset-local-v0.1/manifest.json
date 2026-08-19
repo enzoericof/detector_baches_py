@@ -1,0 +1,132 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_id": "dataset-local-v0.1",
+  "dataset_version": "0.1.0",
+  "parent_dataset_id": null,
+  "status": "draft",
+  "title": "Dataset local piloto de baches",
+  "description": "Ejemplo sintético del manifiesto para cuadros urbanos paraguayos.",
+  "created_at_utc": "2026-08-19T14:00:00.000Z",
+  "frozen_at_utc": null,
+  "code_revision": null,
+  "task": {
+    "type": "object_detection",
+    "annotation_format": "yolo_bbox_normalized",
+    "classes": [
+      {
+        "id": 0,
+        "name": "pothole"
+      }
+    ]
+  },
+  "selection": {
+    "unit": "frame",
+    "strategy": "Muestreo temporal con selección manual de positivos diversos y negativos difíciles.",
+    "minimum_spacing_ms": 1000,
+    "criteria": [
+      "calzada visible y cuadro enfocado",
+      "diversidad de distancia y ángulo",
+      "evitar cuadros consecutivos casi idénticos"
+    ],
+    "negative_categories": [
+      "shadow",
+      "patch",
+      "manhole_cover",
+      "crack",
+      "puddle",
+      "other"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "source-synthetic-pilot",
+      "kind": "synthetic",
+      "name": "Capturas piloto sintéticas",
+      "version": "0.1",
+      "uri": null,
+      "license": "Solo para pruebas del contrato",
+      "trips": [
+        {
+          "session_id": "session-20260819-0700-D01",
+          "trip_id": "trip-20260819-0705-R01-P01",
+          "capture_quality_class": "A"
+        },
+        {
+          "session_id": "session-20260819-0700-D01",
+          "trip_id": "trip-20260819-0730-R02-P01",
+          "capture_quality_class": "A"
+        },
+        {
+          "session_id": "session-20260819-0700-D01",
+          "trip_id": "trip-20260819-0800-R01-P02",
+          "capture_quality_class": "B"
+        }
+      ]
+    }
+  ],
+  "split_policy": {
+    "strategy": "grouped_holdout",
+    "grouping_key": "trip_id",
+    "seed": 20260819,
+    "target_ratios": {
+      "train": 0.7,
+      "validation": 0.15,
+      "test": 0.15
+    },
+    "notes": "El ejemplo contiene pocos recorridos; las proporciones reales no pueden igualar exactamente el objetivo."
+  },
+  "splits": [
+    {
+      "name": "train",
+      "trip_ids": [
+        "trip-20260819-0705-R01-P01"
+      ],
+      "sample_count": 3
+    },
+    {
+      "name": "validation",
+      "trip_ids": [
+        "trip-20260819-0730-R02-P01"
+      ],
+      "sample_count": 2
+    },
+    {
+      "name": "test",
+      "trip_ids": [
+        "trip-20260819-0800-R01-P02"
+      ],
+      "sample_count": 1
+    }
+  ],
+  "files": {
+    "sample_index": {
+      "relative_path": "samples.jsonl",
+      "format": "application/x-ndjson",
+      "record_count": 6,
+      "sha256": "1910ec3c513f87d17e531fe3ae6c8a746a9ba21e12788cf3069fb9cf171eb5bb"
+    }
+  },
+  "statistics": {
+    "sample_count": 6,
+    "positive_sample_count": 4,
+    "negative_sample_count": 2,
+    "annotation_count": 5,
+    "by_split": {
+      "train": 3,
+      "validation": 2,
+      "test": 1
+    },
+    "by_class": {
+      "pothole": 5
+    }
+  },
+  "governance": {
+    "dataset_license": "Solo para pruebas del contrato",
+    "annotation_review_status": "pending",
+    "privacy_review_status": "pending",
+    "known_limitations": [
+      "Datos sintéticos sin imágenes ni etiquetas binarias.",
+      "Cantidad insuficiente para entrenar o evaluar un modelo."
+    ]
+  }
+}

@@ -42,3 +42,5 @@ Cada resultado deberá identificar como mínimo:
 - revisión del código.
 
 La versión inicial del contrato es `0.1.0`. Los archivos en `examples/` son sintéticos y solo comprueban la integración.
+
+Cada versión de datos procesados usa un [manifiesto reproducible](dataset_manifest.md). La partición se realiza por `trip_id`, no por cuadro, para impedir que imágenes casi consecutivas de un mismo recorrido aparezcan a ambos lados de una evaluación.

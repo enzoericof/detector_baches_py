@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detector-baches.local/schemas/dataset_sample.schema.json",
+  "title": "Dataset sample",
+  "description": "Cuadro seleccionado, su procedencia, partición y anotación.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_id",
+    "sample_id",
+    "split",
+    "source",
+    "image",
+    "annotation",
+    "is_negative",
+    "negative_categories",
+    "selection_reason"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "dataset_id": { "type": "string", "minLength": 1 },
+    "sample_id": { "type": "string", "pattern": "^sample-[0-9]{6}$" },
+    "split": { "enum": ["train", "validation", "test"] },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "session_id",
+        "trip_id",
+        "segment_id",
+        "frame_media_time_us",
+        "frame_elapsed_realtime_ns"
+      ],
+      "properties": {
+        "source_id": { "type": "string", "minLength": 1 },
+        "session_id": { "type": "string", "minLength": 1 },
+        "trip_id": { "type": "string", "minLength": 1 },
+        "segment_id": { "type": "string", "pattern": "^seg-[0-9]{4}$" },
+        "frame_media_time_us": { "type": "integer", "minimum": 0 },
+        "frame_elapsed_realtime_ns": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relative_path", "width", "height", "sha256"],
+      "properties": {
+        "relative_path": { "type": "string", "pattern": "^images/(train|validation|test)/sample-[0-9]{6}\\.jpg$" },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relative_path", "format", "object_count", "class_counts", "sha256"],
+      "properties": {
+        "relative_path": { "type": "string", "pattern": "^labels/(train|validation|test)/sample-[0-9]{6}\\.txt$" },
+        "format": { "const": "yolo_bbox_normalized" },
+        "object_count": { "type": "integer", "minimum": 0 },
+        "class_counts": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "is_negative": { "type": "boolean" },
+    "negative_categories": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["shadow", "patch", "manhole_cover", "crack", "puddle", "other"] }
+    },
+    "selection_reason": { "type": "string", "minLength": 1 }
+  }
+}

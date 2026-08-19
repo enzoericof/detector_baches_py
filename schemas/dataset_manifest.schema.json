@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detector-baches.local/schemas/dataset_manifest.schema.json",
+  "title": "Dataset manifest",
+  "description": "Identidad, procedencia, partición, estadísticas e integridad de una versión del dataset.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_id",
+    "dataset_version",
+    "parent_dataset_id",
+    "status",
+    "title",
+    "description",
+    "created_at_utc",
+    "frozen_at_utc",
+    "code_revision",
+    "task",
+    "selection",
+    "sources",
+    "split_policy",
+    "splits",
+    "files",
+    "statistics",
+    "governance"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "dataset_id": {
+      "type": "string",
+      "pattern": "^dataset-[a-z0-9-]+-v[0-9]+\\.[0-9]+$"
+    },
+    "dataset_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "parent_dataset_id": { "type": ["string", "null"] },
+    "status": { "enum": ["draft", "frozen"] },
+    "title": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "created_at_utc": { "type": "string", "format": "date-time" },
+    "frozen_at_utc": {
+      "anyOf": [
+        { "type": "string", "format": "date-time" },
+        { "type": "null" }
+      ]
+    },
+    "code_revision": {
+      "anyOf": [
+        { "type": "string", "pattern": "^[0-9a-f]{7,40}$" },
+        { "type": "null" }
+      ]
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "annotation_format", "classes"],
+      "properties": {
+        "type": { "const": "object_detection" },
+        "annotation_format": { "const": "yolo_bbox_normalized" },
+        "classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name"],
+            "properties": {
+              "id": { "type": "integer", "minimum": 0 },
+              "name": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit", "strategy", "minimum_spacing_ms", "criteria", "negative_categories"],
+      "properties": {
+        "unit": { "const": "frame" },
+        "strategy": { "type": "string", "minLength": 1 },
+        "minimum_spacing_ms": { "type": "integer", "minimum": 0 },
+        "criteria": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "negative_categories": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["shadow", "patch", "manhole_cover", "crack", "puddle", "other"]
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "kind", "name", "version", "uri", "license", "trips"],
+        "properties": {
+          "source_id": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["local_capture", "external_dataset", "synthetic"] },
+          "name": { "type": "string", "minLength": 1 },
+          "version": { "type": ["string", "null"] },
+          "uri": { "type": ["string", "null"] },
+          "license": { "type": "string", "minLength": 1 },
+          "trips": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["session_id", "trip_id", "capture_quality_class"],
+              "properties": {
+                "session_id": { "type": "string", "minLength": 1 },
+                "trip_id": { "type": "string", "minLength": 1 },
+                "capture_quality_class": { "enum": ["A", "B", "C", "not_applicable"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "split_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "grouping_key", "seed", "target_ratios", "notes"],
+      "properties": {
+        "strategy": { "const": "grouped_holdout" },
+        "grouping_key": { "const": "trip_id" },
+        "seed": { "type": "integer", "minimum": 0 },
+        "target_ratios": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["train", "validation", "test"],
+          "properties": {
+            "train": { "type": "number", "minimum": 0, "maximum": 1 },
+            "validation": { "type": "number", "minimum": 0, "maximum": 1 },
+            "test": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "splits": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "trip_ids", "sample_count"],
+        "properties": {
+          "name": { "enum": ["train", "validation", "test"] },
+          "trip_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+          "sample_count": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sample_index"],
+      "properties": {
+        "sample_index": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["relative_path", "format", "record_count", "sha256"],
+          "properties": {
+            "relative_path": { "const": "samples.jsonl" },
+            "format": { "const": "application/x-ndjson" },
+            "record_count": { "type": "integer", "minimum": 0 },
+            "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_count",
+        "positive_sample_count",
+        "negative_sample_count",
+        "annotation_count",
+        "by_split",
+        "by_class"
+      ],
+      "properties": {
+        "sample_count": { "type": "integer", "minimum": 0 },
+        "positive_sample_count": { "type": "integer", "minimum": 0 },
+        "negative_sample_count": { "type": "integer", "minimum": 0 },
+        "annotation_count": { "type": "integer", "minimum": 0 },
+        "by_split": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["train", "validation", "test"],
+          "properties": {
+            "train": { "type": "integer", "minimum": 0 },
+            "validation": { "type": "integer", "minimum": 0 },
+            "test": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "by_class": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_license", "annotation_review_status", "privacy_review_status", "known_limitations"],
+      "properties": {
+        "dataset_license": { "type": "string", "minLength": 1 },
+        "annotation_review_status": { "enum": ["pending", "in_progress", "complete"] },
+        "privacy_review_status": { "enum": ["pending", "in_progress", "complete"] },
+        "known_limitations": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    }
+  }
+}

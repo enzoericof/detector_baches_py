@@ -44,3 +44,5 @@ Cada resultado deberá identificar como mínimo:
 La versión inicial del contrato es `0.1.0`. Los archivos en `examples/` son sintéticos y solo comprueban la integración.
 
 Cada versión de datos procesados usa un [manifiesto reproducible](dataset_manifest.md). La partición se realiza por `trip_id`, no por cuadro, para impedir que imágenes casi consecutivas de un mismo recorrido aparezcan a ambos lados de una evaluación.
+
+Los experimentos ejecutables viven en `notebooks/`. Cada notebook debe fijar una revisión exacta del repositorio, mostrar sus parámetros y ejecutarse de principio a fin antes de publicarse. El primer [smoke test reproducible](../notebooks/01_reproducible_smoke_test.ipynb) valida el entorno sin entrenar un modelo.

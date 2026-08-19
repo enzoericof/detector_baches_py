@@ -63,6 +63,12 @@ python -m detector_baches.dataset_validation examples/dataset-local-v0.1 --allow
 
 Una versión real se valida sin `--allow-missing-artifacts` antes de congelarla y usarla en experimentos.
 
+## Ejecutar el primer notebook de Colab
+
+El [notebook reproducible](notebooks/01_reproducible_smoke_test.ipynb) descarga una revisión exacta del proyecto, valida los ejemplos de captura y dataset, reconcilia sus estadísticas y ejecuta todas las pruebas. No entrena todavía un modelo ni necesita GPU.
+
+[Abrir el notebook en Google Colab](https://colab.research.google.com/github/enzoericof/detector_baches_py/blob/main/notebooks/01_reproducible_smoke_test.ipynb)
+
 ## Estructura
 
 ```text

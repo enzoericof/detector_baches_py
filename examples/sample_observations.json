@@ -1,0 +1,42 @@
+{
+  "schema_version": "0.1.0",
+  "synthetic": true,
+  "observations": [
+    {
+      "observation_id": "obs-demo-001",
+      "trip_id": "trip-demo-001",
+      "track_id": "track-001",
+      "started_at_ms": 4200,
+      "ended_at_ms": 5100,
+      "detection_count": 5,
+      "confidence_max": 0.91,
+      "confidence_mean": 0.84,
+      "latitude": -25.2914,
+      "longitude": -57.6248,
+      "horizontal_accuracy_m": 6.5,
+      "speed_mps": 10.2,
+      "heading_deg": 145.0,
+      "road_segment_id": null,
+      "evidence_uri": "evidence/demo/obs-demo-001.jpg",
+      "model_version": "simulated-0.1.0"
+    },
+    {
+      "observation_id": "obs-demo-002",
+      "trip_id": "trip-demo-001",
+      "track_id": "track-002",
+      "started_at_ms": 12800,
+      "ended_at_ms": 13700,
+      "detection_count": 4,
+      "confidence_max": 0.87,
+      "confidence_mean": 0.79,
+      "latitude": -25.2921,
+      "longitude": -57.6239,
+      "horizontal_accuracy_m": 8.1,
+      "speed_mps": 9.8,
+      "heading_deg": 147.0,
+      "road_segment_id": null,
+      "evidence_uri": "evidence/demo/obs-demo-002.jpg",
+      "model_version": "simulated-0.1.0"
+    }
+  ]
+}

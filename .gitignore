@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local configuration
+.env
+.env.*
+!.env.example
+
+# Generated outputs
+artifacts/*
+!artifacts/.gitkeep
+runs/
+models/
+*.pt
+*.onnx
+*.tflite
+
+# Datasets and field recordings
+data/raw/
+data/interim/
+data/processed/
+data/external/

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detector-baches.local/schemas/observation.schema.json",
+  "title": "Pothole observation",
+  "description": "Detecciones del mismo bache consolidadas durante una pasada.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "observation_id",
+    "trip_id",
+    "track_id",
+    "started_at_ms",
+    "ended_at_ms",
+    "detection_count",
+    "confidence_max",
+    "confidence_mean",
+    "latitude",
+    "longitude",
+    "horizontal_accuracy_m",
+    "model_version"
+  ],
+  "properties": {
+    "observation_id": { "type": "string", "minLength": 1 },
+    "trip_id": { "type": "string", "minLength": 1 },
+    "track_id": { "type": "string", "minLength": 1 },
+    "started_at_ms": { "type": "integer", "minimum": 0 },
+    "ended_at_ms": { "type": "integer", "minimum": 0 },
+    "detection_count": { "type": "integer", "minimum": 1 },
+    "confidence_max": { "type": "number", "minimum": 0, "maximum": 1 },
+    "confidence_mean": { "type": "number", "minimum": 0, "maximum": 1 },
+    "latitude": { "type": "number", "minimum": -90, "maximum": 90 },
+    "longitude": { "type": "number", "minimum": -180, "maximum": 180 },
+    "horizontal_accuracy_m": { "type": "number", "minimum": 0 },
+    "model_version": { "type": "string", "minLength": 1 },
+    "speed_mps": { "type": ["number", "null"], "minimum": 0 },
+    "heading_deg": { "type": ["number", "null"], "minimum": 0, "exclusiveMaximum": 360 },
+    "road_segment_id": { "type": ["string", "null"] },
+    "evidence_uri": { "type": ["string", "null"] }
+  }
+}

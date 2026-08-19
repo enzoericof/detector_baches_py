@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detector-baches.local/schemas/trip.schema.json",
+  "title": "Survey trip",
+  "description": "Metadatos de un recorrido de relevamiento.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "trip_id",
+    "device_id",
+    "started_at",
+    "configuration_version"
+  ],
+  "properties": {
+    "trip_id": { "type": "string", "minLength": 1 },
+    "device_id": { "type": "string", "minLength": 1 },
+    "started_at": { "type": "string", "format": "date-time" },
+    "ended_at": { "type": ["string", "null"], "format": "date-time" },
+    "configuration_version": { "type": "string", "minLength": 1 },
+    "model_version": { "type": ["string", "null"] },
+    "notes": { "type": ["string", "null"] }
+  }
+}

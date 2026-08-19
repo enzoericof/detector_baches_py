@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detector-baches.local/schemas/detection.schema.json",
+  "title": "Frame detection",
+  "description": "Predicción de un detector para un único cuadro de video.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "detection_id",
+    "trip_id",
+    "frame_timestamp_ms",
+    "bounding_box",
+    "confidence",
+    "model_version"
+  ],
+  "properties": {
+    "detection_id": { "type": "string", "minLength": 1 },
+    "trip_id": { "type": "string", "minLength": 1 },
+    "frame_timestamp_ms": { "type": "integer", "minimum": 0 },
+    "bounding_box": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x_min", "y_min", "x_max", "y_max"],
+      "properties": {
+        "x_min": { "type": "number", "minimum": 0 },
+        "y_min": { "type": "number", "minimum": 0 },
+        "x_max": { "type": "number", "minimum": 0 },
+        "y_max": { "type": "number", "minimum": 0 }
+      }
+    },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "model_version": { "type": "string", "minLength": 1 },
+    "track_id": { "type": ["string", "null"] }
+  }
+}

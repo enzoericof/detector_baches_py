@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "detector-baches"
+version = "0.1.0"
+description = "Tubería experimental para detectar y registrar baches georreferenciados."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "enzoericof" }
+]
+dependencies = []
+
+[project.scripts]
+detector-baches = "detector_baches.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

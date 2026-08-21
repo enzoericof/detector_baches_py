@@ -90,6 +90,12 @@ de resultados y la gráfica.
 Cada ejecución persistida incluye un manifiesto SHA-256 y `_SUCCESS.json`. La
 carpeta final solo se publica después de volver a verificar todos los archivos.
 
+La validación real de la tarea 11 se ejecutó en una Tesla T4 y quedó registrada
+en [Google Drive](https://drive.google.com/drive/folders/1VpZch8LqFW7oqgWpoUQO5JRSvbxvCLoz).
+La ejecución `task10-minimum-gpu-training-20260821t115217z-c4282d2` conservó
+los nueve artefactos (10.836.483 bytes) y el manifiesto verificado tiene SHA-256
+`3c313a7ce957657d5fd3fafd49267807dab5c523b9a6513c24f324b790daf4d5`.
+
 ## Estructura
 
 ```text

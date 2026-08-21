@@ -123,10 +123,9 @@ class MinimumGpuTrainingNotebookTest(unittest.TestCase):
         ]
         if any(cell["execution_count"] is None for cell in code_cells):
             self.skipTest("La ejecución completa requiere GPU y autorización de Drive")
-        self.assertEqual(
-            [cell["execution_count"] for cell in code_cells],
-            list(range(1, len(code_cells) + 1)),
-        )
+        execution_counts = [cell["execution_count"] for cell in code_cells]
+        self.assertEqual(execution_counts, sorted(execution_counts))
+        self.assertEqual(len(execution_counts), len(set(execution_counts)))
         self.assertFalse(
             any(
                 output.get("output_type") == "error"

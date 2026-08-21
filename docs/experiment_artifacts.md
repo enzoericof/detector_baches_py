@@ -46,6 +46,20 @@ task10-minimum-gpu-training-20260821t153000z-9cc6210
 Cada nueva ejecución usa otra carpeta. Los resultados anteriores no se
 sobrescriben.
 
+## Evidencia de validación
+
+La ejecución completa del 21 de agosto de 2026 se verificó primero dentro de
+Colab y luego mediante una lectura independiente de Google Drive:
+
+- carpeta: [`task10-minimum-gpu-training-20260821t115217z-c4282d2`](https://drive.google.com/drive/folders/1VpZch8LqFW7oqgWpoUQO5JRSvbxvCLoz);
+- artefactos declarados: 9;
+- tamaño total: 10.836.483 bytes;
+- estado de `_SUCCESS.json`: `complete`;
+- SHA-256 del manifiesto: `3c313a7ce957657d5fd3fafd49267807dab5c523b9a6513c24f324b790daf4d5`.
+
+Esta evidencia confirma que la infraestructura guarda y recupera resultados;
+no evalúa la capacidad del modelo para detectar baches reales.
+
 ## Proceso de escritura
 
 1. El notebook monta Google Drive mediante la autorización interactiva de Colab.

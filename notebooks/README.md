@@ -58,5 +58,6 @@ El notebook de GPU solo puede validarse completamente en un entorno con CUDA.
 Su estructura se comprueba localmente; la evidencia definitiva es una ejecución
 completa en Colab con `status: passed` y `drive_persistence_confirmed: true`.
 
-La versión publicada incluye esa evidencia: fue ejecutada de principio a fin en
-una Tesla T4, con nueve celdas de código numeradas y sin errores.
+La versión publicada incluye esa evidencia: fue ejecutada en una Tesla T4, con
+las once celdas de código ejecutadas y sin salidas de error. Los contadores
+pueden contener saltos cuando se repite una celda de autorización de Drive.

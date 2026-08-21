@@ -52,3 +52,8 @@ es una prueba de infraestructura separada de los experimentos científicos.
 Exige CUDA, usa datos sintéticos acotados y comprueba que el entrenador modifica
 los parámetros y genera pesos, resultados y gráficas. Sus métricas no se usan
 para evaluar la hipótesis de la tesis.
+
+Los artefactos de cada ejecución se conservan según el
+[protocolo de persistencia experimental](experiment_artifacts.md). La escritura
+usa una carpeta temporal, huellas SHA-256 y una marca `_SUCCESS.json` para que
+una interrupción no produzca una ejecución aparentemente completa.

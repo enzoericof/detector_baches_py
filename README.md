@@ -105,6 +105,7 @@ artifacts/             Resultados generados localmente
 - [Protocolo de montaje y captura](docs/capture_protocol.md)
 - [Registro y sincronización de video, tiempo y GNSS](docs/synchronization_protocol.md)
 - [Formato del manifiesto del dataset](docs/dataset_manifest.md)
+- [Persistencia de resultados experimentales](docs/experiment_artifacts.md)
 
 ## Alcance inicial
 

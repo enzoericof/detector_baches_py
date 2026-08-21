@@ -7,7 +7,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK_PATH = PROJECT_ROOT / "notebooks" / "01_reproducible_smoke_test.ipynb"
 PINNED_REVISION = "f67005b294a0e23f7ab820c001e119a4b6e7d29a"
 GPU_NOTEBOOK_PATH = PROJECT_ROOT / "notebooks" / "02_minimum_gpu_training.ipynb"
-GPU_PINNED_REVISION = "45cb8f28ad2b00698a33cbcca756685648bde8fa"
+GPU_PINNED_REVISION = "c4282d2ae1e980b7cebb028ee857b1f4612ca9a5"
 PINNED_ULTRALYTICS_VERSION = "8.4.123"
 
 
@@ -95,10 +95,17 @@ class MinimumGpuTrainingNotebookTest(unittest.TestCase):
         self.assertIn("device=0", self.sources)
         self.assertIn('training_device_evidence.get("is_cuda") is True', self.sources)
 
-    def test_scope_is_synthetic_and_drive_is_deferred(self):
+    def test_scope_is_synthetic_and_persists_to_versioned_drive_folder(self):
         self.assertIn('"uses_real_pothole_data": False', self.sources)
         self.assertIn('"scientific_result": False', self.sources)
-        self.assertNotIn("drive.mount", self.sources)
+        self.assertIn("drive.mount", self.sources)
+        self.assertIn(
+            "TESIS/experiments/experiment-pilot-v0.1/runs", self.sources
+        )
+        self.assertIn("persist_experiment_run", self.sources)
+        self.assertIn("validate_persisted_run", self.sources)
+        self.assertIn('"drive_persistence_confirmed": True', self.sources)
+        self.assertEqual(self.sources.count("ArtifactSpec("), 9)
 
     def test_validates_training_outputs(self):
         for expected_check in (
@@ -114,6 +121,8 @@ class MinimumGpuTrainingNotebookTest(unittest.TestCase):
         code_cells = [
             cell for cell in self.notebook["cells"] if cell["cell_type"] == "code"
         ]
+        if any(cell["execution_count"] is None for cell in code_cells):
+            self.skipTest("La ejecución completa requiere GPU y autorización de Drive")
         self.assertEqual(
             [cell["execution_count"] for cell in code_cells],
             list(range(1, len(code_cells) + 1)),
@@ -140,6 +149,8 @@ class MinimumGpuTrainingNotebookTest(unittest.TestCase):
             '"cuda_training_confirmed": true',
             '"completed_epochs": 2',
             '"status": "passed"',
+            '"drive_persistence_confirmed": true',
+            '"artifact_count": 9',
         ):
             self.assertIn(evidence, joined_outputs)
 

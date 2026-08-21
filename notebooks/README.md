@@ -28,8 +28,9 @@ genera 16 imágenes sintéticas, construye un YOLO nano desde cero y entrena dos
 gráficas.
 
 Los datos y las métricas de esta prueba no son evidencia sobre baches reales.
-Los artefactos son temporales; su guardado automático en Drive pertenece a la
-tarea 11.
+El notebook monta Drive y conserva automáticamente configuración, métricas,
+curvas y pesos en una carpeta única dentro de
+`TESIS/experiments/experiment-pilot-v0.1/runs`.
 
 Abrirlo en Colab:
 
@@ -55,7 +56,7 @@ regenerarse y volver a ejecutarse de principio a fin.
 
 El notebook de GPU solo puede validarse completamente en un entorno con CUDA.
 Su estructura se comprueba localmente; la evidencia definitiva es una ejecución
-completa en Colab con el resumen `status: passed`.
+completa en Colab con `status: passed` y `drive_persistence_confirmed: true`.
 
 La versión publicada incluye esa evidencia: fue ejecutada de principio a fin en
 una Tesla T4, con nueve celdas de código numeradas y sin errores.

@@ -8,7 +8,7 @@ import nbformat
 from nbformat.v4 import new_code_cell, new_markdown_cell, new_notebook
 
 
-PROJECT_REVISION = "45cb8f28ad2b00698a33cbcca756685648bde8fa"
+PROJECT_REVISION = "c4282d2ae1e980b7cebb028ee857b1f4612ca9a5"
 ULTRALYTICS_VERSION = "8.4.123"
 OUTPUT_PATH = Path("notebooks/02_minimum_gpu_training.ipynb")
 
@@ -22,7 +22,7 @@ def build_notebook() -> nbformat.NotebookNode:
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/enzoericof/detector_baches_py/blob/main/notebooks/02_minimum_gpu_training.ipynb)
 
-Este notebook valida que Google Colab puede entrenar un detector YOLO usando una GPU CUDA. Genera imágenes sintéticas diminutas, entrena dos épocas y presenta evidencias del dispositivo, los archivos producidos y las curvas del entrenamiento.
+Este notebook valida que Google Colab puede entrenar un detector YOLO usando una GPU CUDA y conservar automáticamente sus resultados en Google Drive. Genera imágenes sintéticas diminutas, entrena dos épocas, verifica los artefactos y los copia a una ejecución versionada.
 
 > **Importante:** los datos son artificiales y las métricas no representan la capacidad de detectar baches reales. Esta es una prueba de infraestructura, no un resultado experimental de la tesis."""
         ),
@@ -34,7 +34,8 @@ Completar una ejecución pequeña y reproducible que confirme cuatro puntos:
 1. Colab asignó una GPU compatible con CUDA;
 2. Ultralytics puede construir y entrenar un detector de una clase;
 3. los parámetros del modelo cambian durante el entrenamiento;
-4. se producen pesos, resultados tabulares y gráficas inspeccionables."""
+4. se producen pesos, resultados tabulares y gráficas inspeccionables;
+5. los artefactos se guardan en Drive con manifiesto, SHA-256 y marca de finalización."""
         ),
         new_markdown_cell(
             """## Setup
@@ -44,12 +45,15 @@ Completar una ejecución pequeña y reproducible que confirme cuatro puntos:
 - El entorno debe configurarse con `Entorno de ejecución → Cambiar tipo de entorno de ejecución → GPU T4`.
 - El conjunto sintético existe solo para comprobar la tubería de entrenamiento.
 - El modelo se inicia desde cero; no descarga pesos preentrenados.
-- Los resultados permanecen en el almacenamiento temporal de Colab. La persistencia en Drive corresponde a la tarea 11.
+- La cuenta debe autorizar el montaje de `Mi unidad` cuando Colab lo solicite.
+- El destino del piloto es `Mi unidad/TESIS/experiments/experiment-pilot-v0.1/runs`.
+- Cada ejecución usa una carpeta nueva y no sobrescribe resultados anteriores.
 
 La revisión del proyecto, la versión de Ultralytics, la semilla y los parámetros quedan visibles a continuación."""
         ),
         new_code_cell(
             f'''from pathlib import Path
+from datetime import datetime, timezone
 import json
 import os
 import random
@@ -68,11 +72,16 @@ VAL_IMAGE_COUNT = 4
 EPOCHS = 2
 BATCH_SIZE = 4
 RUN_NAME = "task10-minimum-gpu-training"
+DRIVE_EXPERIMENT_PATH = Path("TESIS/experiments/experiment-pilot-v0.1/runs")
 
 IS_COLAB = "COLAB_RELEASE_TAG" in os.environ
 RUN_ROOT = Path("/content") if IS_COLAB else Path(tempfile.gettempdir())
 PROJECT_DIR = RUN_ROOT / f"detector_baches_py_{{PROJECT_REVISION[:7]}}"
 WORK_DIR = RUN_ROOT / RUN_NAME
+RUN_STARTED_AT = datetime.now(timezone.utc).replace(microsecond=0)
+RUN_STARTED_AT_UTC = RUN_STARTED_AT.isoformat().replace("+00:00", "Z")
+RUN_TIMESTAMP = RUN_STARTED_AT.strftime("%Y%m%dt%H%M%Sz").lower()
+PERSISTENCE_RUN_ID = f"{{RUN_NAME}}-{{RUN_TIMESTAMP}}-{{PROJECT_REVISION[:7]}}"
 
 experiment_config = {{
     "purpose": "gpu_infrastructure_smoke_test",
@@ -87,6 +96,8 @@ experiment_config = {{
     "batch_size": BATCH_SIZE,
     "requested_device": "cuda:0",
     "uses_real_pothole_data": False,
+    "persistence_run_id": PERSISTENCE_RUN_ID,
+    "drive_experiment_path": DRIVE_EXPERIMENT_PATH.as_posix(),
 }}
 print(json.dumps(experiment_config, indent=2))'''
         ),
@@ -133,6 +144,9 @@ actual_revision = subprocess.run(
     capture_output=True,
 ).stdout.strip()
 assert actual_revision == PROJECT_REVISION
+project_source_path = str(PROJECT_DIR / "src")
+if project_source_path not in sys.path:
+    sys.path.insert(0, project_source_path)
 print(f"Revisión preparada: {actual_revision}")'''
         ),
         new_markdown_cell(
@@ -421,9 +435,9 @@ print(json.dumps(run_checks, indent=2))
 display(DisplayImage(filename=str(results_plot), width=900))'''
         ),
         new_markdown_cell(
-            """### 8. Produce an ephemeral execution summary
+            """### 8. Produce the execution summary
 
-El resumen permite auditar la prueba dentro de la sesión actual. En esta tarea no se copia a Drive ni se declara un modelo utilizable."""
+El resumen permite auditar la prueba y explicita que los datos son sintéticos. También registra de antemano el `run_id` y el destino esperado en Drive."""
         ),
         new_code_cell(
             '''summary = {
@@ -436,23 +450,165 @@ El resumen permite auditar la prueba dentro de la sesión actual. En esta tarea 
     "losses_by_epoch": loss_values,
     "artifact_directory": str(save_dir),
     "scientific_result": False,
+    "persistence": {
+        "run_id": PERSISTENCE_RUN_ID,
+        "drive_experiment_path": DRIVE_EXPERIMENT_PATH.as_posix(),
+    },
 }
 summary_path = save_dir / "task10_summary.json"
 summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+(save_dir / "experiment_config.json").write_text(
+    json.dumps(experiment_config, indent=2), encoding="utf-8"
+)
+(save_dir / "environment.json").write_text(
+    json.dumps(environment, indent=2), encoding="utf-8"
+)
 print(json.dumps({
     "status": summary["status"],
     "scope": summary["scope"],
     "gpu": environment["gpu_name"],
     "epochs": run_checks["completed_epochs"],
     "summary_file": summary_path.name,
+    "persistence_run_id": PERSISTENCE_RUN_ID,
 }, indent=2))'''
+        ),
+        new_markdown_cell(
+            """### 9. Mount Google Drive
+
+Colab solicitará autorización para acceder a `Mi unidad`. El notebook se detiene si no está en Colab o si el montaje no expone el destino esperado."""
+        ),
+        new_code_cell(
+            '''if not IS_COLAB:
+    raise RuntimeError("La persistencia automática de esta tarea requiere Google Colab")
+
+from google.colab import drive
+
+DRIVE_MOUNT_POINT = Path("/content/drive")
+drive.mount(str(DRIVE_MOUNT_POINT), force_remount=False)
+MY_DRIVE_ROOT = DRIVE_MOUNT_POINT / "MyDrive"
+if not MY_DRIVE_ROOT.is_dir():
+    raise RuntimeError("Google Drive se montó pero no se encontró Mi unidad")
+
+DRIVE_RUNS_DIRECTORY = MY_DRIVE_ROOT / DRIVE_EXPERIMENT_PATH
+DRIVE_RUNS_DIRECTORY.mkdir(parents=True, exist_ok=True)
+print(json.dumps({
+    "drive_mounted": True,
+    "destination": str(DRIVE_RUNS_DIRECTORY),
+    "run_id": PERSISTENCE_RUN_ID,
+}, indent=2))'''
+        ),
+        new_markdown_cell(
+            """### 10. Persist and verify every required artifact
+
+Los archivos se copian primero a una carpeta temporal. El helper calcula SHA-256, escribe el manifiesto y `_SUCCESS.json`, publica la carpeta final y vuelve a leer todas las huellas."""
+        ),
+        new_code_cell(
+            '''from detector_baches.experiment_artifacts import (
+    ArtifactSpec,
+    persist_experiment_run,
+    validate_persisted_run,
+)
+
+training_output_relative = save_dir.relative_to(WORK_DIR).as_posix()
+artifact_specs = [
+    ArtifactSpec(
+        f"{training_output_relative}/args.yaml",
+        "config/args.yaml",
+        "trainer_arguments",
+        "application/yaml",
+    ),
+    ArtifactSpec(
+        "synthetic_dataset/dataset.yaml",
+        "config/dataset.yaml",
+        "dataset_configuration",
+        "application/yaml",
+    ),
+    ArtifactSpec(
+        f"{training_output_relative}/experiment_config.json",
+        "config/experiment_config.json",
+        "experiment_configuration",
+        "application/json",
+    ),
+    ArtifactSpec(
+        f"{training_output_relative}/environment.json",
+        "config/environment.json",
+        "runtime_environment",
+        "application/json",
+    ),
+    ArtifactSpec(
+        f"{training_output_relative}/results.csv",
+        "metrics/results.csv",
+        "epoch_metrics",
+        "text/csv",
+    ),
+    ArtifactSpec(
+        f"{training_output_relative}/task10_summary.json",
+        "metrics/task10_summary.json",
+        "execution_summary",
+        "application/json",
+    ),
+    ArtifactSpec(
+        f"{training_output_relative}/results.png",
+        "plots/results.png",
+        "training_curves",
+        "image/png",
+    ),
+    ArtifactSpec(
+        f"{training_output_relative}/weights/best.pt",
+        "weights/best.pt",
+        "best_weights",
+        "application/octet-stream",
+    ),
+    ArtifactSpec(
+        f"{training_output_relative}/weights/last.pt",
+        "weights/last.pt",
+        "last_weights",
+        "application/octet-stream",
+    ),
+]
+
+persistence_metadata = {
+    "created_at_utc": RUN_STARTED_AT_UTC,
+    "purpose": experiment_config["purpose"],
+    "repository_url": REPOSITORY_URL,
+    "project_revision": PROJECT_REVISION,
+    "notebook": "notebooks/02_minimum_gpu_training.ipynb",
+    "experiment_version": "experiment-pilot-v0.1",
+    "dataset": dataset_summary,
+    "environment": environment,
+    "scientific_result": False,
+}
+persistence_report = persist_experiment_run(
+    source_root=WORK_DIR,
+    destination_root=DRIVE_RUNS_DIRECTORY,
+    run_id=PERSISTENCE_RUN_ID,
+    artifacts=artifact_specs,
+    metadata=persistence_metadata,
+)
+verified_report = validate_persisted_run(persistence_report.run_directory)
+
+assert verified_report.artifact_count == len(artifact_specs) == 9
+assert verified_report.total_bytes > 0
+assert len(verified_report.manifest_sha256) == 64
+assert (verified_report.run_directory / "_SUCCESS.json").is_file()
+
+drive_persistence_result = {
+    "status": "passed",
+    "drive_persistence_confirmed": True,
+    "run_id": verified_report.run_id,
+    "artifact_count": verified_report.artifact_count,
+    "total_bytes": verified_report.total_bytes,
+    "manifest_sha256": verified_report.manifest_sha256,
+    "drive_directory": str(verified_report.run_directory),
+}
+print(json.dumps(drive_persistence_result, indent=2))'''
         ),
         new_markdown_cell(
             """## Next Steps
 
-Una ejecución completa confirma Colab, CUDA y la tubería de entrenamiento de detección. No confirma exactitud sobre calles reales.
+Una ejecución completa confirma Colab, CUDA, la tubería de entrenamiento y la persistencia verificable en Drive. No confirma exactitud sobre calles reales.
 
-La tarea 11 deberá montar Google Drive y copiar automáticamente un resumen, las curvas, la configuración y los pesos a la carpeta versionada del experimento. El entrenamiento con datos reales se diseñará después de capturar, anotar y congelar un dataset válido."""
+La carpeta final puede utilizarse como evidencia de infraestructura porque contiene configuración, métricas, curvas, pesos, manifiesto y huellas. El entrenamiento con datos reales se diseñará después de capturar, anotar y congelar un dataset válido."""
         ),
     ]
 

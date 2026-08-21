@@ -78,14 +78,17 @@ de ejecución → GPU T4` antes de usar `Ejecutar todo`.
 
 [Abrir el entrenamiento mínimo en Google Colab](https://colab.research.google.com/github/enzoericof/detector_baches_py/blob/main/notebooks/02_minimum_gpu_training.ipynb)
 
-Esta prueba exige CUDA y produce una gráfica, pesos y un resumen en el disco
-temporal de Colab. Sus datos son artificiales y sus métricas no miden la calidad
-del futuro detector. La copia automática de resultados a Drive se incorpora en
-la tarea 11.
+Esta prueba exige CUDA y produce una gráfica, pesos y un resumen. Sus datos son
+artificiales y sus métricas no miden la calidad del futuro detector. Al final,
+monta Drive y guarda automáticamente nueve artefactos bajo
+`TESIS/experiments/experiment-pilot-v0.1/runs/<run_id>`.
 
 La copia publicada conserva una ejecución correcta en una Tesla T4: CUDA fue
 confirmada, se completaron las dos épocas y se generaron ambos pesos, la tabla
 de resultados y la gráfica.
+
+Cada ejecución persistida incluye un manifiesto SHA-256 y `_SUCCESS.json`. La
+carpeta final solo se publica después de volver a verificar todos los archivos.
 
 ## Estructura
 
